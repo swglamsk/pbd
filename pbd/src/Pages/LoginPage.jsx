@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { StyledFirebaseAuth } from "react-firebaseui";
 import firebase from "firebase";
-
+import {Nav} from "../Components/Nav"
 const useStyles = makeStyles({
   root: {
     display: "flex",
@@ -20,11 +20,10 @@ export const LoginPage = () => {
     // Popup signin flow rather than redirect flow.
     signInFlow: "popup",
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/",
+    signInSuccessUrl: "",
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
     callbacks:{
-      signInSuccessWithAuthResult: (foo) => {localStorage.setItem('email', foo.user.email)  
-      console.log(foo.user.email)}
+      signInSuccessWithAuthResult: (foo) => {localStorage.setItem('email', foo.user.email)  }
     }
   };
   React.useEffect(() => {
@@ -36,7 +35,10 @@ export const LoginPage = () => {
 
   const classes = useStyles();
   return (
+    <div>
+    {!isSignedIn ? null : <Nav></Nav>}
     <div className={classes.root}>
+
       <div>
         {!isSignedIn ? (
           <div>
@@ -53,6 +55,7 @@ export const LoginPage = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

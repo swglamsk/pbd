@@ -9,8 +9,8 @@ import { Nav } from "./Components/Nav";
 import firebase from "firebase";
 import { AllCategories } from "./Pages/AllCategories";
 import { Searched } from "./Pages/Searched";
-import {getUserData} from "./utils/checkUser"
-
+import { getUserData } from "./utils/checkUser";
+import React from "react";
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "knowledge-management-bd522.firebaseapp.com",
@@ -24,16 +24,24 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 function App() {
+  const [isUser, setIsUser] = React.useState(null);
+  React.useEffect(() => {
+    const role = localStorage.getItem("email");
+    if (role === "admin@admin.com" || role === "editor@editor.com" || role === "user@user.com") {
+      setIsUser(false);
+      console.log(isUser);
+      console.log("isuser powienine byc false");
+    } else if (role === null) {
+      setIsUser(true);
+    }
+  },[]);
+
   return (
     <BrowserRouter>
-      <Nav />
       <Route exact path="/" component={LoginPage} />
-      <Route path="/signedInUser" component={SignedInUser} />
-      <Route path="/signedInAdmin" component={signedInAdmin} />
       <Route path="/signedInEditor" component={signedInEditor} />
       <Route path="/AllPosts" component={AllPosts} />
-      <Route path="/categories" component={AllCategories}/>
-      <Route path="/searched" componen={Searched}/>
+      <Route path="/categories" component={AllCategories} />
     </BrowserRouter>
   );
 }

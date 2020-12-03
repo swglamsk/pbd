@@ -19,33 +19,35 @@ export const Nav = () => {
   const classes = useStyles();
   const db = firebase.firestore();
   const [searched, setSearched] = React.useState(null)
-  const [isUser, setIsUser] = React.useState(true)
-  const role = getUserData()
-
-  React.useEffect(() => {
-    if(role === "user" || role === "user@user.com"){
-        setIsUser(true)
-        console.log(role)
-        console.log(isUser)
-    }else if (role==="admin@admin.com" || role==="editor@editor.com" || role==="admin" || role==="editor"){
-      setIsUser(false)
-    }
-  },[role, isUser])
+  const [isUser, setIsUser] = React.useState(null)
+  const [isAdmin, setIsAdmin] = React.useState(null)
+ 
+ const role = localStorage.getItem("email")
+ React.useEffect(() =>{
+  if( role === "user@user.com"){
+    setIsUser(true)
+  }
+  if (role === "admin@admin.com"){
+    setIsAdmin(true)
+  }
+ 
+ },[])
 
   return (
     <Navbar className="bg-light justify-content-between">
       <div className={classes.navbar}>
         <Form inline>
-          {!isUser ? null :  
+          {isUser ? null :  
           <Button type="submit" onClick={() => history.push("/signedInEditor")}>
             Add new post
           </Button> }
           <Button type="submit" onClick={() => history.push("/allPosts")}>
             See all posts
           </Button>
+          {!isAdmin ? null :  
           <Button type="submit" onClick={() => history.push("/categories")}>
             See all categories
-          </Button>
+          </Button>}
           <Button
             type="submit"
             onClick={() => {

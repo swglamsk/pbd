@@ -1,16 +1,16 @@
 import firebase from "firebase";
-export const getUserData = async () => {
-    let role = ''
+export const getUserData = () => {
   const db = firebase.firestore();
+  let data = ""
   db.collection("Users")
     .where("email", "==", localStorage.getItem("email"))
     .get()
     .then((query) => {
       query.forEach((doc) => {
-        role = doc.data().role;
-        console.log(doc.data().name)
-        console.log("test?")
+        data = doc.data().role;
+        console.log(data)
+        console.log("teraz funkcja")
       });
     });
-    return role
+    return data
 };
