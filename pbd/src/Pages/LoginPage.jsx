@@ -15,6 +15,7 @@ const useStyles = makeStyles({
 // Configure FirebaseUI.
 
 export const LoginPage = () => {
+  console.log("test")
   const [isSignedIn, setIsSignedIn] = React.useState(false);
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
