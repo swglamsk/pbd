@@ -35,7 +35,7 @@ export const CreatePost = () => {
           );
         });
     })();
-  }, []);
+  }, [db]);
 
   const submitForm = () => {
     setUserID(firebase.auth().currentUser.email);

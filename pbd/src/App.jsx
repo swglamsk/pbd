@@ -1,15 +1,10 @@
 import { LoginPage } from "./Pages/LoginPage";
 import { BrowserRouter, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { SignedInUser } from "./Pages/SignedInUser";
-import { signedInAdmin } from "./Pages/signedInAdmin";
 import { signedInEditor } from "./Pages/signedInEditor";
 import { AllPosts } from "./Pages/AllPosts";
-import { Nav } from "./Components/Nav";
 import firebase from "firebase";
 import { AllCategories } from "./Pages/AllCategories";
-import { Searched } from "./Pages/Searched";
-import { getUserData } from "./utils/checkUser";
 import React from "react";
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -34,7 +29,7 @@ function App() {
     } else if (role === null) {
       setIsUser(true);
     }
-  },[]);
+  },[isUser]);
 
   return (
     <BrowserRouter>

@@ -1,8 +1,5 @@
-import { makeStyles } from "@material-ui/core";
 import React from "react";
-import useState from "react";
-import { Navbar, Form, FormControl, Button, Card } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Form, Button, Card } from "react-bootstrap";
 import firebase from "firebase";
 import Popup from "reactjs-popup";
 export const Document = ({ docData }) => {
@@ -12,7 +9,6 @@ export const Document = ({ docData }) => {
   };
   const [title, setTitle] = React.useState(docData.data().title);
   const [category, setCategory] = React.useState(docData.data().category);
-  const [userID, setUserID] = React.useState(null);
   const [text, setText] = React.useState(docData.data().text);
   const [categories, setCategories] = React.useState([]);
   const [documentID, setID] = React.useState(null);
@@ -37,12 +33,12 @@ export const Document = ({ docData }) => {
           );
         });
     })();
-  }, []);
+  }, [db, role]);
   const submitForm = () => {
     setID(Math.random() * 100000);
     db.collection("documents")
       .doc(docData.id)
-      .set({ title, category, userID, text, documentID })
+      .set({ title, category, text, documentID })
       .then(function () {
         console.log("done");
       });

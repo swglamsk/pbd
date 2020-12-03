@@ -27,7 +27,7 @@ export const AllPosts = () => {
           );
         });
     })();
-  }, [documents]);
+  }, [documents, db]);
 
   return documents.map((element) => 
     <div className={classes.root}>

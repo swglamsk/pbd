@@ -16,7 +16,7 @@ export const Searched = (searching) => {
           );
         });
     })();
-  }, []);
+  }, [db, searching]);
 
   return documents.map((element) => <Document docData={element}></Document>);
 };

@@ -1,6 +1,5 @@
 import React from "react";
 import firebase from "firebase";
-import { Document } from "../Components/Document";
 import { Table } from "@material-ui/core";
 import { Form, Button } from "react-bootstrap";
 export const AllCategories = () => {
@@ -19,7 +18,7 @@ export const AllCategories = () => {
           );
         });
     })();
-  }, [categories]);
+  }, [categories, db]);
   const submitCategory = () => {
     db.collection("Category")
       .doc()

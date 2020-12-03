@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import { Navbar, Form, FormControl, Button } from "react-bootstrap";
+import { Navbar, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
-import {getUserData} from "../utils/checkUser"
 const useStyles = makeStyles({
   navbar: {
     overflow: "hidden",
@@ -17,8 +16,6 @@ const useStyles = makeStyles({
 export const Nav = () => {
   const history = useHistory();
   const classes = useStyles();
-  const db = firebase.firestore();
-  const [searched, setSearched] = React.useState(null)
   const [isUser, setIsUser] = React.useState(null)
   const [isAdmin, setIsAdmin] = React.useState(null)
  
@@ -31,7 +28,7 @@ export const Nav = () => {
     setIsAdmin(true)
   }
  
- },[])
+ },[role])
 
   return (
     <Navbar className="bg-light justify-content-between">
