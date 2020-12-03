@@ -22,6 +22,10 @@ export const LoginPage = () => {
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
     signInSuccessUrl: "/",
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+    callbacks:{
+      signInSuccessWithAuthResult: (foo) => {localStorage.setItem('email', foo.user.email)  
+      console.log(foo.user.email)}
+    }
   };
   React.useEffect(() => {
     const unregisterAuthObserver = firebase

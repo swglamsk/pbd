@@ -1,14 +1,28 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
 import firebase from "firebase";
+import { makeStyles } from "@material-ui/core";
 
+const useStyles = makeStyles({
+  root:{
+      display:"flex",
+      width:"100%",
+      justifyContent:"center",
+      alignItems:"center"
+
+  }
+})
 export const CreatePost = () => {
+  const classes = useStyles()
   const db = firebase.firestore();
   const [title, setTitle] = React.useState(null);
   const [category, setCategory] = React.useState(null);
   const [userID, setUserID] = React.useState(null);
   const [text, setText] = React.useState(null);
   const [categories, setCategories] = React.useState([]);
+  const [documentID, setID] = React.useState(null)
+
+
   React.useEffect(() => {
     (() => {
       db.collection("Category")
@@ -25,14 +39,16 @@ export const CreatePost = () => {
 
   const submitForm = () => {
     setUserID(firebase.auth().currentUser.email);
+    setID(Math.random()*100000)
     db.collection("documents")
       .doc()
-      .set({ title, category, userID, text })
+      .set({ title, category, userID, text, documentID })
       .then(function () {
         console.log("done");
       });
   };
   return (
+    <div className={classes.root}>
     <Form>
       <Form.Group controlId="CreatePost.Title">
         <Form.Label>Title</Form.Label>
@@ -58,9 +74,11 @@ export const CreatePost = () => {
           />
         </Form.Group>
       </Form.Group>
-      <Button variant="primary" type="submit" onClick={submitForm}>
+      <Button variant="primary" onClick={submitForm}>
         Add document
       </Button>
     </Form>
+    </div>
+
   );
 };

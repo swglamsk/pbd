@@ -7,6 +7,9 @@ import { signedInEditor } from "./Pages/signedInEditor";
 import { AllPosts } from "./Pages/AllPosts";
 import { Nav } from "./Components/Nav";
 import firebase from "firebase";
+import { AllCategories } from "./Pages/AllCategories";
+import { Searched } from "./Pages/Searched";
+import {getUserData} from "./utils/checkUser"
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -29,6 +32,8 @@ function App() {
       <Route path="/signedInAdmin" component={signedInAdmin} />
       <Route path="/signedInEditor" component={signedInEditor} />
       <Route path="/AllPosts" component={AllPosts} />
+      <Route path="/categories" component={AllCategories}/>
+      <Route path="/searched" componen={Searched}/>
     </BrowserRouter>
   );
 }

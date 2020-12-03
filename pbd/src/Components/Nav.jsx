@@ -3,7 +3,7 @@ import React from "react";
 import { Navbar, Form, FormControl, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
-
+import {getUserData} from "../utils/checkUser"
 const useStyles = makeStyles({
   navbar: {
     overflow: "hidden",
@@ -17,24 +17,44 @@ const useStyles = makeStyles({
 export const Nav = () => {
   const history = useHistory();
   const classes = useStyles();
+  const db = firebase.firestore();
+  const [searched, setSearched] = React.useState(null)
+  const [isUser, setIsUser] = React.useState(true)
+  const role = getUserData()
+
+  React.useEffect(() => {
+    if(role === "user" || role === "user@user.com"){
+        setIsUser(true)
+        console.log(role)
+        console.log(isUser)
+    }else if (role==="admin@admin.com" || role==="editor@editor.com" || role==="admin" || role==="editor"){
+      setIsUser(false)
+    }
+  },[role, isUser])
+
   return (
     <Navbar className="bg-light justify-content-between">
       <div className={classes.navbar}>
         <Form inline>
-          <FormControl
-            type="text"
-            placeholder="Search documents"
-            className=" mr-sm-2"
-          />
-          <Button type="submit">Search</Button>
+          {!isUser ? null :  
           <Button type="submit" onClick={() => history.push("/signedInEditor")}>
             Add new post
-          </Button>
-          <Button type="submit" onClick={() => history.push("/allUsers")}>
-            See all users
-          </Button>
+          </Button> }
           <Button type="submit" onClick={() => history.push("/allPosts")}>
             See all posts
+          </Button>
+          <Button type="submit" onClick={() => history.push("/categories")}>
+            See all categories
+          </Button>
+          <Button
+            type="submit"
+            onClick={() => {
+              firebase.auth().signOut();
+              history.push("/");
+              localStorage.removeItem("email")
+            }}
+          >
+            Log out
           </Button>
         </Form>
       </div>
