@@ -33,7 +33,7 @@ export const AllCategories = () => {
       .get()
       .then((query) => {
         query.forEach((doc) => {
-          db.collection("Category").doc(doc.id).delete()
+          db.collection("Category").doc(doc.id).delete();
         });
       });
   };
@@ -68,7 +68,7 @@ export const AllCategories = () => {
         <Button variant="primary" onClick={submitCategory}>
           Add
         </Button>
-        <Button variant="primary"  onClick={deleteCategory}>
+        <Button variant="primary" onClick={deleteCategory}>
           Delete
         </Button>
       </Form>

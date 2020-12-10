@@ -1,7 +1,7 @@
 import { LoginPage } from "./Pages/LoginPage";
 import { BrowserRouter, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { signedInEditor } from "./Pages/signedInEditor";
+import { AddPost } from "./Pages/AddPost";
 import { AllPosts } from "./Pages/AllPosts";
 import firebase from "firebase";
 import { AllCategories } from "./Pages/AllCategories";
@@ -22,19 +22,21 @@ function App() {
   const [isUser, setIsUser] = React.useState(null);
   React.useEffect(() => {
     const role = localStorage.getItem("email");
-    if (role === "admin@admin.com" || role === "editor@editor.com" || role === "user@user.com") {
+    if (
+      role === "admin@admin.com" ||
+      role === "editor@editor.com" ||
+      role === "user@user.com"
+    ) {
       setIsUser(false);
-      console.log(isUser);
-      console.log("isuser powienine byc false");
     } else if (role === null) {
       setIsUser(true);
     }
-  },[isUser]);
+  }, [isUser]);
 
   return (
     <BrowserRouter>
       <Route exact path="/" component={LoginPage} />
-      <Route path="/signedInEditor" component={signedInEditor} />
+      <Route path="/AddPost" component={AddPost} />
       <Route path="/AllPosts" component={AllPosts} />
       <Route path="/categories" component={AllCategories} />
     </BrowserRouter>

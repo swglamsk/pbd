@@ -1,5 +1,5 @@
 import { CreatePost } from "../Components/CreatePost";
 
-export const signedInEditor = () => {
+export const AddPost = () => {
   return <CreatePost></CreatePost>;
 };

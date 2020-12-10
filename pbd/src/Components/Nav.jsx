@@ -16,41 +16,45 @@ const useStyles = makeStyles({
 export const Nav = () => {
   const history = useHistory();
   const classes = useStyles();
-  const [isUser, setIsUser] = React.useState(null)
-  const [isAdmin, setIsAdmin] = React.useState(null)
- 
- const role = localStorage.getItem("email")
- React.useEffect(() =>{
-  if( role === "user@user.com"){
-    setIsUser(true)
-  }
-  if (role === "admin@admin.com"){
-    setIsAdmin(true)
-  }
- 
- },[role])
+  const [isUser, setIsUser] = React.useState(null);
+  const [isAdmin, setIsAdmin] = React.useState(null);
+
+  const role = localStorage.getItem("email");
+  React.useEffect(() => {
+    if (role === "user@user.com") {
+      setIsUser(true);
+    }
+    if (role === "admin@admin.com") {
+      setIsAdmin(true);
+    }
+  }, [role]);
 
   return (
     <Navbar className="bg-light justify-content-between">
       <div className={classes.navbar}>
         <Form inline>
-          {isUser ? null :  
-          <Button type="submit" onClick={() => history.push("/signedInEditor")}>
-            Add new post
-          </Button> }
+          {isUser ? null : (
+            <Button
+              type="submit"
+              onClick={() => history.push("/AddPost")}
+            >
+              Add new post
+            </Button>
+          )}
           <Button type="submit" onClick={() => history.push("/allPosts")}>
             See all posts
           </Button>
-          {!isAdmin ? null :  
-          <Button type="submit" onClick={() => history.push("/categories")}>
-            See all categories
-          </Button>}
+          {!isAdmin ? null : (
+            <Button type="submit" onClick={() => history.push("/categories")}>
+              See all categories
+            </Button>
+          )}
           <Button
             type="submit"
             onClick={() => {
               firebase.auth().signOut();
               history.push("/");
-              localStorage.removeItem("email")
+              localStorage.removeItem("email");
             }}
           >
             Log out
