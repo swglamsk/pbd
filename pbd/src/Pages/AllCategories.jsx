@@ -2,10 +2,13 @@ import React from "react";
 import firebase from "firebase";
 import { Table } from "@material-ui/core";
 import { Form, Button } from "react-bootstrap";
+import {Searched} from "./Searched"
 export const AllCategories = () => {
   const db = firebase.firestore();
   const [categories, setCategories] = React.useState([]);
   const [Name, setCategoryName] = React.useState(null);
+  const [searchedCategory, setSearchedCategory] = React.useState(null);
+  const [visible, setVisible] = React.useState(false)
   React.useEffect(() => {
     (() => {
       db.collection("Category")
@@ -13,16 +16,16 @@ export const AllCategories = () => {
         .then((snapshot) => {
           setCategories(
             snapshot.docs.map((doc) => {
-              return doc.data();
+              return doc;
             })
           );
         });
     })();
-  }, [categories, db]);
+  }, []);
   const submitCategory = () => {
     db.collection("Category")
       .doc()
-      .set({ Name, categoryID: Math.random() * 100000000000000000 })
+      .set({ Name})
       .then(function () {
         console.log("done");
       });
@@ -51,8 +54,8 @@ export const AllCategories = () => {
           {categories.map((element, key) => (
             <tr>
               <td>{key}</td>
-              <td>{element.Name}</td>
-              <td>{element.categoryID}</td>
+              <td>{element.data().Name}</td>
+              <td>{element.id}</td>
             </tr>
           ))}
         </tbody>
@@ -64,6 +67,10 @@ export const AllCategories = () => {
             placeholder="Enter category name"
             onChange={(e) => setCategoryName(e.target.value)}
           />
+          <Form.Control
+            placeholder="search by category"
+            onChange={(e) => setSearchedCategory(e.target.value)}
+          ></Form.Control>
         </Form.Group>
         <Button variant="primary" onClick={submitCategory}>
           Add
@@ -71,6 +78,10 @@ export const AllCategories = () => {
         <Button variant="primary" onClick={deleteCategory}>
           Delete
         </Button>
+        <Button variant="primary" onClick={() => setVisible(true)}>
+            Search
+        </Button>
+        {visible && <Searched searching={searchedCategory}/>}
       </Form>
     </div>
   );

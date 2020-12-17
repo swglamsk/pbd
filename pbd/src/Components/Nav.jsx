@@ -18,13 +18,29 @@ export const Nav = () => {
   const classes = useStyles();
   const [isUser, setIsUser] = React.useState(null);
   const [isAdmin, setIsAdmin] = React.useState(null);
-
-  const role = localStorage.getItem("email");
+  const [role, setRole] = React.useState(null);
   React.useEffect(() => {
-    if (role === "user@user.com") {
+    const db = firebase.firestore();
+    (async () => {
+      const query = await db
+        .collection("Users")
+        .where("email", "==", localStorage.getItem("email"))
+        .get();
+
+      query.forEach((doc) => {
+        setRole(doc.data().role);
+        
+      });
+      console.log(role);
+      console.log("teraz funkcja");
+    })();
+
+    if (role === "user") {
+      console.log("jest to user");
       setIsUser(true);
     }
-    if (role === "admin@admin.com") {
+    if (role === "admin") {
+      console.log("jest to admin");
       setIsAdmin(true);
     }
   }, [role]);
@@ -34,10 +50,7 @@ export const Nav = () => {
       <div className={classes.navbar}>
         <Form inline>
           {isUser ? null : (
-            <Button
-              type="submit"
-              onClick={() => history.push("/AddPost")}
-            >
+            <Button type="submit" onClick={() => history.push("/AddPost")}>
               Add new post
             </Button>
           )}

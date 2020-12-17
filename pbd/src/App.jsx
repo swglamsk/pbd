@@ -6,6 +6,7 @@ import { AllPosts } from "./Pages/AllPosts";
 import firebase from "firebase";
 import { AllCategories } from "./Pages/AllCategories";
 import React from "react";
+import {checkUser} from "../src/utils/checkUser"
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "knowledge-management-bd522.firebaseapp.com",

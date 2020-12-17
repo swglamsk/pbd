@@ -28,9 +28,9 @@ export const AllPosts = () => {
     })();
   }, [documents, db]);
 
-  return documents.map((element) => (
+  return documents.map((element, key) => (
     <div className={classes.root}>
-      <Document docData={element}></Document>
+      <Document key={key} docData={element}></Document>
     </div>
   ));
 };

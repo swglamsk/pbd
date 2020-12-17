@@ -38,10 +38,9 @@ export const CreatePost = () => {
 
   const submitForm = () => {
     setUserID(firebase.auth().currentUser.email);
-    setID(Math.random() * 1000000000000000);
     db.collection("documents")
       .doc()
-      .set({ title, category, userID, text, documentID })
+      .set({ title, category, userID, text})
       .then(function () {
         console.log("done");
       });

@@ -11,17 +11,31 @@ export const Document = ({ docData }) => {
   const [category, setCategory] = React.useState(docData.data().category);
   const [text, setText] = React.useState(docData.data().text);
   const [categories, setCategories] = React.useState([]);
-  const [documentID, setID] = React.useState(null);
-  const role = localStorage.getItem("email");
   const [isAdmin, setIsAdmin] = React.useState(null);
   const [isUser, setIsUser] = React.useState(null);
+  const [role, setRole] = React.useState(null)
   React.useEffect(() => {
     (() => {
-      if (role === "admin@admin.com") {
-        setIsAdmin(true);
-      }
-      if (role === "user@user.com") {
+      (async () => {
+        const query = await db
+          .collection("Users")
+          .where("email", "==", localStorage.getItem("email"))
+          .get();
+  
+        query.forEach((doc) => {
+          setRole(doc.data().role);
+          
+        });
+        console.log(role);
+        console.log("teraz funkcja");
+      })();
+      if (role === "user") {
+        console.log("jest to user");
         setIsUser(true);
+      }
+      if (role === "admin") {
+        console.log("jest to admin");
+        setIsAdmin(true);
       }
       db.collection("Category")
         .get()
@@ -35,10 +49,9 @@ export const Document = ({ docData }) => {
     })();
   }, [db, role]);
   const submitForm = () => {
-    setID(Math.random() * 100000);
     db.collection("documents")
       .doc(docData.id)
-      .set({ title, category, text, documentID })
+      .set({ title, category, text })
       .then(function () {
         console.log("done");
       });
@@ -73,7 +86,7 @@ export const Document = ({ docData }) => {
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   {categories.map((row) => {
-                    return <option value={row.Name}>{row.Name}</option>;
+                    return <option key={row.ID} value={row.Name}>{row.Name}</option>;
                   })}
                 </Form.Control>
                 <Form.Group controlId="CreatePost.Doc">
