@@ -21,7 +21,8 @@ export const AllCategories = () => {
           );
         });
     })();
-  }, []);
+  }, [categories]);
+  
   const submitCategory = () => {
     db.collection("Category")
       .doc()
