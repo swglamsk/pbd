@@ -1,27 +1,34 @@
 import React from "react";
-import firebase from "firebase";
 import { Document } from "..//Components/Document";
-export const Searched = ({searching}) => {
-  const db = firebase.firestore();
+
+import axios from "axios"
+const URL = 'http://127.0.0.1:8000'
+export const Searched = ({ searching }) => {
   const [documents, setDocuments] = React.useState([]);
 
+  const getDocs = async () => {
+    await axios.get(`${URL}/posts/`).then(response => {
+      setDocuments(response.data.map(post => {
+        return post
+      }))
+
+    })
+  }
+  const containsDocument = ( (value) => {
+    return value.categories.name === searching
+  })
+
   React.useEffect(() => {
-
-    (async () => {
-      console.log('useeffect')
-      var tmp_docs = []
-      const snapshot = await db.collection("documents")
-        .where("category", "==", searching)
-        .get();
-          snapshot.forEach((doc) => {
-
-            tmp_docs.push(doc)
-          })
-
-        setDocuments(tmp_docs)
-    })();
+    getDocs()
+    setDocuments(documents.filter(containsDocument))
+    console.log(searching)
   }, []);
-  return <div>
-{documents.map((element) => <Document key={element.id} docData={element}></Document>)}
-  </div>
+
+  return (
+    <div>
+      {documents.map((element) => (
+        <Document key={element.id} docData={element}></Document>
+      ))}
+    </div>
+  );
 };

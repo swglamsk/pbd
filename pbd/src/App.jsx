@@ -3,36 +3,9 @@ import { BrowserRouter, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AddPost } from "./Pages/AddPost";
 import { AllPosts } from "./Pages/AllPosts";
-import firebase from "firebase";
 import { AllCategories } from "./Pages/AllCategories";
 import React from "react";
-import {checkUser} from "../src/utils/checkUser"
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: "knowledge-management-bd522.firebaseapp.com",
-  databaseURL: "https://knowledge-management-bd522.firebaseio.com",
-  projectId: "knowledge-management-bd522",
-  storageBucket: "knowledge-management-bd522.appspot.com",
-  messagingSenderId: "270814337955",
-  appId: "1:270814337955:web:4861c7f59c35e15f63d816",
-  measurementId: "G-42VPFY6TDN",
-};
-
-firebase.initializeApp(firebaseConfig);
 function App() {
-  const [isUser, setIsUser] = React.useState(null);
-  React.useEffect(() => {
-    const role = localStorage.getItem("email");
-    if (
-      role === "admin@admin.com" ||
-      role === "editor@editor.com" ||
-      role === "user@user.com"
-    ) {
-      setIsUser(false);
-    } else if (role === null) {
-      setIsUser(true);
-    }
-  }, [isUser]);
 
   return (
     <BrowserRouter>

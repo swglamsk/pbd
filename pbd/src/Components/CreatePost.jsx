@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import firebase from "firebase";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core";
-
+const URL = "http://127.0.0.1:8000";
 const useStyles = makeStyles({
   root: {
     display: "flex",
@@ -14,37 +14,59 @@ const useStyles = makeStyles({
 
 export const CreatePost = () => {
   const classes = useStyles();
-  const db = firebase.firestore();
   const [title, setTitle] = React.useState(null);
-  const [category, setCategory] = React.useState(null);
-  const [userID, setUserID] = React.useState(null);
   const [text, setText] = React.useState(null);
+  const [tags, setTags] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
-  const [documentID, setID] = React.useState(null);
+  const selectedTags = []
+  const selectedCategories = []
 
-  React.useEffect(() => {
-    (() => {
-      db.collection("Category")
-        .get()
-        .then((snapshot) => {
-          setCategories(
-            snapshot.docs.map((doc) => {
-              return doc.data();
-            })
-          );
-        });
-    })();
-  }, [db]);
-
-  const submitForm = () => {
-    setUserID(firebase.auth().currentUser.email);
-    db.collection("documents")
-      .doc()
-      .set({ title, category, userID, text})
-      .then(function () {
-        console.log("done");
-      });
+  const getCategories = async () => {
+    await axios.get(`${URL}/categories/`).then((response) => {
+      setCategories(
+        response.data.map((category) => {
+          return category;
+        })
+      );
+    });
   };
+  const getTags = async () => {
+    await axios.get(`${URL}/tags/`).then((response) => {
+      setTags(
+        response.data.map((tag) => {
+          return tag;
+        })
+      );
+    });
+  };
+  React.useEffect(() => {
+    getCategories();
+    getTags();
+  }, []);
+
+  const submitForm = async () => {
+    const userID = JSON.parse(localStorage.getItem("user")).id;
+    await axios.post(`${URL}/posts/create/`, {
+      post_title: title,
+      content: text,
+      categories: selectedCategories,
+      tags: selectedTags,
+      author: userID,
+    });
+  };
+  const handleChangeTags = async (value) => {
+    if(!selectedTags.includes(value)){
+      selectedTags.push(parseInt(value))
+    }
+      console.log(selectedTags)
+  }
+  const handleChangeCategories = async (value) => {
+    if(!selectedCategories.includes(value)){
+      selectedCategories.push(parseInt(value))
+    }
+
+    console.log(selectedCategories)
+  }
   return (
     <div className={classes.root}>
       <Form>
@@ -60,10 +82,18 @@ export const CreatePost = () => {
           <Form.Label>Category</Form.Label>
           <Form.Control
             as="select"
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => handleChangeCategories(e.target.value)}
           >
             {categories.map((row) => {
-              return <option value={row.Name}>{row.Name}</option>;
+              return <option value={row.id}>{row.name}</option>;
+            })}
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="CreatePost.Tags">
+          <Form.Label>Tags</Form.Label>
+          <Form.Control as="select" onChange={(e) => handleChangeTags(e.target.value)}>
+            {tags.map((row) => {
+              return <option value={row.id}>{row.name}</option>;
             })}
           </Form.Control>
           <Form.Group controlId="CreatePost.Doc">

@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { Navbar, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import firebase from "firebase";
 const useStyles = makeStyles({
   navbar: {
     overflow: "hidden",
@@ -19,29 +18,20 @@ export const Nav = () => {
   const [isUser, setIsUser] = React.useState(null);
   const [isAdmin, setIsAdmin] = React.useState(null);
   const [role, setRole] = React.useState(null);
+
+  
   React.useEffect(() => {
-    const db = firebase.firestore();
-    (async () => {
-      const query = await db
-        .collection("Users")
-        .where("email", "==", localStorage.getItem("email"))
-        .get();
-
-      query.forEach((doc) => {
-        setRole(doc.data().role);
-        
-      });
-      console.log(role);
-      console.log("teraz funkcja");
-    })();
-
-    if (role === "user") {
-      console.log("jest to user");
-      setIsUser(true);
+    if(role === null || undefined){
+      setRole(JSON.parse(localStorage.getItem("user")).role);
     }
-    if (role === "admin") {
-      console.log("jest to admin");
+
+    if (role === "USER") {
+      setIsUser(true);
+      setIsAdmin(false)
+    }
+    if (role === "ADMIN") {
       setIsAdmin(true);
+      setIsUser(false)
     }
   }, [role]);
 
@@ -65,9 +55,8 @@ export const Nav = () => {
           <Button
             type="submit"
             onClick={() => {
-              firebase.auth().signOut();
               history.push("/");
-              localStorage.removeItem("email");
+              localStorage.removeItem("user");
             }}
           >
             Log out

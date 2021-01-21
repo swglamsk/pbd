@@ -1,7 +1,9 @@
 import React from "react";
-import firebase from "firebase";
 import { Document } from "../Components/Document";
 import { makeStyles } from "@material-ui/core";
+import axios from "axios"
+const URL = 'http://127.0.0.1:8000'
+
 const useStyles = makeStyles({
   root: {
     marginTop: "100",
@@ -12,21 +14,19 @@ const useStyles = makeStyles({
 });
 export const AllPosts = () => {
   const classes = useStyles();
-  const db = firebase.firestore();
   const [documents, setDocuments] = React.useState([]);
+
+  const getDocs = async () => {
+    await axios.get(`${URL}/posts/`).then(response => {
+      setDocuments(response.data.map(post => {
+        return post
+      }))
+
+    })
+  }
   React.useEffect(() => {
-    (() => {
-      db.collection("documents")
-        .get()
-        .then((snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return doc;
-            })
-          );
-        });
-    })();
-  }, [documents, db]);
+    getDocs()
+  }, []);
 
   return documents.map((element, key) => (
     <div className={classes.root}>

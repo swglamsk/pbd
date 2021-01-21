@@ -1,9 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { StyledFirebaseAuth } from "react-firebaseui";
-import firebase from "firebase";
 import { Nav } from "../Components/Nav";
-
+import axios from "axios";
+import { Form, Button } from "react-bootstrap";
 const useStyles = makeStyles({
   root: {
     display: "flex",
@@ -12,29 +11,29 @@ const useStyles = makeStyles({
     height: "100%",
   },
 });
-
+const URL = "http://127.0.0.1:8000";
 export const LoginPage = () => {
-  console.log("test");
   const [isSignedIn, setIsSignedIn] = React.useState(false);
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "",
-    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
-    callbacks: {
-      signInSuccessWithAuthResult: (foo) => {
-        localStorage.setItem("email", foo.user.email);
-      },
-    },
+  const [username, setUsername] = React.useState("editor");
+  const [password, setPassword] = React.useState("editor123");
+  const [user, setUser] = React.useState(null);
+
+  const handleLogin = async () => {
+      await axios
+      .post(`${URL}/login/`, {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        setUser(response.data);
+        setIsSignedIn(true);
+      });
+
   };
   React.useEffect(() => {
-    const unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged((user) => setIsSignedIn(!!user));
-    return () => unregisterAuthObserver();
-  }, []);
-
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+  
   const classes = useStyles();
   return (
     <div>
@@ -45,15 +44,23 @@ export const LoginPage = () => {
             <div>
               {" "}
               <h1>Log In</h1>
-              <StyledFirebaseAuth
-                uiConfig={uiConfig}
-                firebaseAuth={firebase.auth()}
-              />
+              <Form>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control placeholder="Enter username" onChange={e => setUsername(e.target.value)} />
+                </Form.Group>
+
+                <Form.Group controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                </Form.Group>
+                <Button variant="primary" onClick={() => handleLogin()}>
+                  Submit
+                </Button>
+              </Form>
             </div>
           ) : (
-            <div>
-              <p>Welcome {firebase.auth().currentUser.email}!</p>
-            </div>
+            <div>Welcome {user.username}</div>
           )}
         </div>
       </div>
